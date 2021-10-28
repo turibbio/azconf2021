@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azconf-app
+  namespace: azconf
+spec:
+  selector:
+    matchLabels:
+      app: azconf-app
+  template:
+    metadata:
+      labels:
+        app: azconf-app
+    spec:
+      containers:
+      - name: azconf-app
+        image: azconfacr.azurecr.io/azconf:0.1.0-6 # {"$imagepolicy": "flux-system:azconf-app"}
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080

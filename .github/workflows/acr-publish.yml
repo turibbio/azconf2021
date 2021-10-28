@@ -1,0 +1,36 @@
+name: ACR-Publish
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  IMAGE_NAME: azconf
+  LATEST_TAG: latest
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.9
+        with:
+          versionSpec: '5.x'
+          
+      - name: Determine Version
+        id:   gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.9
+      
+      - uses: azure/docker-login@v1
+        with:
+          login-server: azconfacr.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - run: |
+          docker build . -t azconfacr.azurecr.io/$IMAGE_NAME:${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.CommitsSinceVersionSource }}
+          docker push azconfacr.azurecr.io/$IMAGE_NAME:${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.CommitsSinceVersionSource }}
