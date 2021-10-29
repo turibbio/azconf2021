@@ -14,11 +14,7 @@ spec:
     spec:
       containers:
       - name: azconf-app
-<<<<<<< HEAD
         image: azconfacr.azurecr.io/azconf:0.1.0-2
-=======
-        image: azconfacr.azurecr.io/azconf:0.1.0-1 # {"$imagepolicy": "flux-system:azconf-app"}
->>>>>>> 4e45c78cd7a2bd0fb5dd50b8ddd12dafdafe68f1
         resources:
           limits:
             memory: "128Mi"
